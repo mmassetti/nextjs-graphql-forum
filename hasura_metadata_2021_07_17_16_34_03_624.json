@@ -1,0 +1,499 @@
+{
+  "resource_version": 52,
+  "metadata": {
+    "version": 3,
+    "sources": [
+      {
+        "name": "default",
+        "kind": "postgres",
+        "tables": [
+          {
+            "table": {
+              "schema": "public",
+              "name": "categories"
+            },
+            "array_relationships": [
+              {
+                "name": "threads",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "category_id",
+                    "table": {
+                      "schema": "public",
+                      "name": "threads"
+                    }
+                  }
+                }
+              }
+            ],
+            "select_permissions": [
+              {
+                "role": "guest",
+                "permission": {
+                  "columns": [
+                    "id",
+                    "name"
+                  ],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              },
+              {
+                "role": "user",
+                "permission": {
+                  "columns": [
+                    "id",
+                    "name"
+                  ],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "schema": "public",
+              "name": "likes"
+            },
+            "object_relationships": [
+              {
+                "name": "post",
+                "using": {
+                  "foreign_key_constraint_on": "post_id"
+                }
+              },
+              {
+                "name": "user",
+                "using": {
+                  "foreign_key_constraint_on": "user_id"
+                }
+              }
+            ],
+            "insert_permissions": [
+              {
+                "role": "user",
+                "permission": {
+                  "check": {
+                    "user_id": {
+                      "_eq": "X-Hasura-User-Id"
+                    }
+                  },
+                  "columns": [
+                    "id",
+                    "post_id",
+                    "user_id"
+                  ],
+                  "backend_only": false
+                }
+              }
+            ],
+            "select_permissions": [
+              {
+                "role": "guest",
+                "permission": {
+                  "columns": [
+                    "id",
+                    "post_id",
+                    "user_id"
+                  ],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              },
+              {
+                "role": "user",
+                "permission": {
+                  "columns": [
+                    "id",
+                    "post_id",
+                    "user_id"
+                  ],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              }
+            ],
+            "delete_permissions": [
+              {
+                "role": "user",
+                "permission": {
+                  "filter": {
+                    "user_id": {
+                      "_eq": "X-Hasura-User-Id"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "schema": "public",
+              "name": "posts"
+            },
+            "object_relationships": [
+              {
+                "name": "author",
+                "using": {
+                  "foreign_key_constraint_on": "author_id"
+                }
+              },
+              {
+                "name": "thread",
+                "using": {
+                  "foreign_key_constraint_on": "thread_id"
+                }
+              }
+            ],
+            "array_relationships": [
+              {
+                "name": "likes",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "post_id",
+                    "table": {
+                      "schema": "public",
+                      "name": "likes"
+                    }
+                  }
+                }
+              }
+            ],
+            "insert_permissions": [
+              {
+                "role": "user",
+                "permission": {
+                  "check": {
+                    "author_id": {
+                      "_eq": "X-Hasura-User-Id"
+                    }
+                  },
+                  "columns": [
+                    "message",
+                    "created_at",
+                    "updated_at",
+                    "author_id",
+                    "id",
+                    "thread_id"
+                  ],
+                  "backend_only": false
+                }
+              }
+            ],
+            "select_permissions": [
+              {
+                "role": "guest",
+                "permission": {
+                  "columns": [
+                    "id",
+                    "thread_id",
+                    "author_id",
+                    "message",
+                    "created_at",
+                    "updated_at"
+                  ],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              },
+              {
+                "role": "user",
+                "permission": {
+                  "columns": [
+                    "message",
+                    "created_at",
+                    "updated_at",
+                    "author_id",
+                    "id",
+                    "thread_id"
+                  ],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              }
+            ],
+            "update_permissions": [
+              {
+                "role": "user",
+                "permission": {
+                  "columns": [
+                    "message",
+                    "created_at",
+                    "updated_at",
+                    "author_id",
+                    "id",
+                    "thread_id"
+                  ],
+                  "filter": {
+                    "author_id": {
+                      "_eq": "X-Hasura-User-Id"
+                    }
+                  },
+                  "check": {}
+                }
+              }
+            ],
+            "delete_permissions": [
+              {
+                "role": "user",
+                "permission": {
+                  "filter": {
+                    "author_id": {
+                      "_eq": "X-Hasura-User-Id"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "schema": "public",
+              "name": "threads"
+            },
+            "object_relationships": [
+              {
+                "name": "author",
+                "using": {
+                  "foreign_key_constraint_on": "author_id"
+                }
+              },
+              {
+                "name": "category",
+                "using": {
+                  "foreign_key_constraint_on": "category_id"
+                }
+              }
+            ],
+            "array_relationships": [
+              {
+                "name": "posts",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "thread_id",
+                    "table": {
+                      "schema": "public",
+                      "name": "posts"
+                    }
+                  }
+                }
+              }
+            ],
+            "insert_permissions": [
+              {
+                "role": "user",
+                "permission": {
+                  "check": {
+                    "author_id": {
+                      "_eq": "X-Hasura-User-Id"
+                    }
+                  },
+                  "columns": [
+                    "answered",
+                    "locked",
+                    "pinned",
+                    "title",
+                    "created_at",
+                    "updated_at",
+                    "author_id",
+                    "category_id",
+                    "id"
+                  ],
+                  "backend_only": false
+                }
+              }
+            ],
+            "select_permissions": [
+              {
+                "role": "guest",
+                "permission": {
+                  "columns": [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "title",
+                    "locked",
+                    "answered",
+                    "pinned",
+                    "author_id",
+                    "category_id"
+                  ],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              },
+              {
+                "role": "user",
+                "permission": {
+                  "columns": [
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "title",
+                    "locked",
+                    "answered",
+                    "pinned",
+                    "author_id",
+                    "category_id"
+                  ],
+                  "filter": {},
+                  "allow_aggregations": true
+                }
+              }
+            ],
+            "update_permissions": [
+              {
+                "role": "user",
+                "permission": {
+                  "columns": [
+                    "answered",
+                    "locked",
+                    "pinned",
+                    "title",
+                    "created_at",
+                    "updated_at",
+                    "author_id",
+                    "category_id",
+                    "id"
+                  ],
+                  "filter": {
+                    "author_id": {
+                      "_eq": "X-Hasura-User-Id"
+                    }
+                  },
+                  "check": {}
+                }
+              }
+            ],
+            "delete_permissions": [
+              {
+                "role": "user",
+                "permission": {
+                  "filter": {
+                    "author_id": {
+                      "_eq": "X-Hasura-User-Id"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "schema": "public",
+              "name": "users"
+            },
+            "object_relationships": [
+              {
+                "name": "thread",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "author_id",
+                    "table": {
+                      "schema": "public",
+                      "name": "threads"
+                    }
+                  }
+                }
+              }
+            ],
+            "array_relationships": [
+              {
+                "name": "likes",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "user_id",
+                    "table": {
+                      "schema": "public",
+                      "name": "likes"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "posts",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "author_id",
+                    "table": {
+                      "schema": "public",
+                      "name": "posts"
+                    }
+                  }
+                }
+              }
+            ],
+            "select_permissions": [
+              {
+                "role": "guest",
+                "permission": {
+                  "columns": [
+                    "created_at",
+                    "id",
+                    "last_seen",
+                    "name"
+                  ],
+                  "filter": {}
+                }
+              },
+              {
+                "role": "user",
+                "permission": {
+                  "columns": [
+                    "created_at",
+                    "id",
+                    "last_seen",
+                    "name"
+                  ],
+                  "filter": {}
+                }
+              }
+            ],
+            "update_permissions": [
+              {
+                "role": "user",
+                "permission": {
+                  "columns": [
+                    "created_at",
+                    "email",
+                    "id",
+                    "last_seen",
+                    "name"
+                  ],
+                  "filter": {
+                    "id": {
+                      "_eq": "X-Hasura-User-Id"
+                    }
+                  },
+                  "check": {}
+                }
+              }
+            ],
+            "delete_permissions": [
+              {
+                "role": "guest",
+                "permission": {
+                  "filter": {
+                    "id": {
+                      "_eq": "X-Hasura-User-Id"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "configuration": {
+          "connection_info": {
+            "use_prepared_statements": false,
+            "database_url": {
+              "from_env": "HEROKU_DATABASE_URL"
+            },
+            "isolation_level": "read-committed"
+          }
+        }
+      }
+    ]
+  }
+}
